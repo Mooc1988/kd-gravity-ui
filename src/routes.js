@@ -60,7 +60,7 @@ let routes = [{
   },
   {
     path: '/huanzhuang',
-    cohuanzhuang: Home,
+    component: Home,
     name: '换装',
     iconCls: 'el-icon-message', //图标样式class
     children: [{
