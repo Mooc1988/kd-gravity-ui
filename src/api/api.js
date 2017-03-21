@@ -44,6 +44,10 @@ export const removeApp = appId => {
   return instance.delete(`/apps/${appId}`)
 }
 
+export const switchAuditMode = appId => {
+  return instance.put(`/apps/${appId}/switchAuditMode`)
+}
+
 export const getAlbumListPage = params => {
   return instance.get('/yss/albums', {
     params

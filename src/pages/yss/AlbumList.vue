@@ -21,27 +21,23 @@
     <!--列表-->
     <el-table :data="albums" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="id" label="ID" width="100">
-        </el-table-column>
-        <el-table-column prop="title" label="名称" min-width="150" sortable>
-        </el-table-column>
-        <el-table-column prop="YssCategory.title" label="类型" width="120" sortable>
-        </el-table-column>
-        <el-table-column prop="tags" label="标签" min-width="150" sortable>
+        <el-table-column prop="id" label="ID" width="100"></el-table-column>
+        <el-table-column prop="title" label="名称" min-width="150"></el-table-column>
+        <el-table-column prop="YssCategory.title" label="类型" width="120"></el-table-column>
+        <el-table-column label="标签" min-width="150">
             <template scope="scope">
             <el-tag v-for="tag in scope.row.tags" :key="tag" type="gray">
               {{tag}}
             </el-tag>
-</template>
+        </template>
         </el-table-column>
         <el-table-column prop="viewCount" label="查看次数" width="120" sortable>
         </el-table-column>
         <el-table-column label="操作" width="150">
             <template scope="scope">
-<el-button size="small" @click="handleEdit(scope.$index, scope.row)">
-    编辑</el-button>
-</template>
-			</el-table-column>
+            <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            </template>
+        </el-table-column>
 		</el-table>
 
 		<!--工具条-->

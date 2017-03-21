@@ -1,22 +1,18 @@
 import Login from './pages/Login.vue'
 import NotFound from './pages/404.vue'
 import Home from './pages/Home.vue'
-import Main from './pages/Main.vue'
-import YssApps from './pages/yss/AppList.vue'
 import YssAlbums from './pages/yss/AlbumList.vue'
-
-import H5Apps from './pages/h5/AppList.vue'
+import AppList from './pages/common/AppList.vue'
 import H5AppDetail from './pages/h5/AppDetail.vue'
-import BookApps from './pages/book/AppList.vue'
-import QipaiApps from './pages/qipai/AppList.vue'
-import HuanzhuangApps from './pages/huanzhuang/AppList.vue'
+import  './pages/Main.vue'
 
-let routes = [{
-  path: '/login',
-  component: Login,
-  name: '',
-  hidden: true
-},
+let routes = [
+  {
+    path: '/login',
+    component: Login,
+    name: '',
+    hidden: true
+  },
   {
     path: '/404',
     component: NotFound,
@@ -28,11 +24,13 @@ let routes = [{
     component: Home,
     name: '有声书',
     iconCls: 'el-icon-message', //图标样式class
-    children: [{
-      path: '/yss/apps',
-      component: YssApps,
-      name: 'App列表'
-    },
+    children: [
+      {
+        path: '/yss/apps',
+        component: AppList,
+        props: {appType: '有声书'},
+        name: 'App列表-有声书'
+      },
       {
         path: '/yss/albums',
         component: YssAlbums,
@@ -45,11 +43,13 @@ let routes = [{
     component: Home,
     name: 'h5游戏',
     iconCls: 'el-icon-message', //图标样式class
-    children: [{
-      path: '/h5/apps',
-      component: H5Apps,
-      name: 'App列表'
-    },
+    children: [
+      {
+        path: '/h5/apps',
+        component: AppList,
+        props: {appType: 'h5'},
+        name: 'App列表-h5'
+      },
       {
         path: '/h5/apps/:id',
         component: H5AppDetail,
@@ -65,8 +65,9 @@ let routes = [{
     iconCls: 'el-icon-message', //图标样式class
     children: [{
       path: '/huanzhuang/apps',
-      component: HuanzhuangApps,
-      name: 'App列表'
+      component: AppList,
+      props: {appType: '换装'},
+      name: 'App列表-换装'
     }]
   },
   {
@@ -76,8 +77,9 @@ let routes = [{
     iconCls: 'el-icon-message', //图标样式class
     children: [{
       path: '/qipai/apps',
-      component: QipaiApps,
-      name: 'App列表'
+      component: AppList,
+      props: {appType: '棋牌'},
+      name: 'App列表-棋牌'
     }]
   },
   {
@@ -87,8 +89,9 @@ let routes = [{
     iconCls: 'el-icon-message', //图标样式class
     children: [{
       path: '/book/apps',
-      component: BookApps,
-      name: 'App列表'
+      component: AppList,
+      props: {appType: '电子书'},
+      name: 'App列表-电子书'
     }]
   },
   {

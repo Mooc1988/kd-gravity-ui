@@ -14,7 +14,6 @@
                 </el-form-item>
             </el-form>
         </el-col>
-
         <!--列表-->
         <el-table :data="apps" highlight-current-row v-loading="listLoading" @selection-change="selsChange"
                   style="width: 100%;">
@@ -25,14 +24,23 @@
             </el-table-column>
             <el-table-column prop="type" label="类型" width="120" sortable>
             </el-table-column>
-            <el-table-column prop="subType" label="子类型" width="120" sortable>
+            <el-table-column label="审核模式" width="120" sortable>
+                <template scope="scope">
+                    <el-switch
+                            v-model="scope.row.auditMode"
+                            on-text="开"
+                            off-text="关"
+                            @change="handleSwitchAudit(scope.$index, scope.row)">
+                    </el-switch>
+                </template>
             </el-table-column>
             <el-table-column prop="User.nickname" label="创建人" width="120" sortable>
             </el-table-column>
-            <el-table-column prop="createdAt" label="创建时间" width="120" :formatter="formatDate" sortable>
+            <el-table-column prop="createdAt" label="创建时间" width="200" :formatter="formatDate" sortable>
             </el-table-column>
-            <el-table-column label="操作" width="150">
+            <el-table-column label="操作" width="200">
                 <template scope="scope">
+                    <el-button size="small" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
                     <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                     <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
                 </template>
@@ -87,10 +95,16 @@
     getAppListPage,
     addApp,
     modifyApp,
-    removeApp
+    removeApp,
+    switchAuditMode
   } from '../../api/api';
-  const APP_TYPE = '电子书';
   export default {
+    props: ['appType'],
+    watch: {
+      appType: function () {
+        this.getApps()
+      }
+    },
     data() {
       return {
         filters: {
@@ -113,7 +127,7 @@
         //编辑界面数据
         editForm: {
           id: 0,
-          type: APP_TYPE
+          type: this.appType
         },
         addFormVisible: false, //新增界面是否显示
         addLoading: false,
@@ -127,7 +141,7 @@
         //新增界面数据
         addForm: {
           name: '',
-          type: APP_TYPE
+          type: this.appType
         }
       }
     },
@@ -139,7 +153,7 @@
         let para = {
           page: this.page,
           search: this.filters.name,
-          type: APP_TYPE
+          type: this.appType
         }
         this.listLoading = true
         NProgress.start()
@@ -149,6 +163,10 @@
           this.listLoading = false
           NProgress.done()
         })
+      },
+      handleDetail: function functionName (index, row) {
+        let id = row.id
+        this.$router.push({path: `/h5/apps/${id}`})
       },
       //删除
       handleDel: function (index, row) {
@@ -173,7 +191,7 @@
       handleEdit: function (index, row) {
         this.editFormVisible = true;
         this.editForm = Object.assign({
-          type: APP_TYPE
+          type: this.appType
         }, row)
       },
       //显示新增界面
@@ -181,7 +199,7 @@
         this.addFormVisible = true
         this.addForm = {
           name: '',
-          type: APP_TYPE
+          type: this.appType
         }
       },
       //编辑
@@ -228,6 +246,18 @@
               this.$message.error(message || err.message)
             })
           }
+        })
+      },
+      handleSwitchAudit: function (index, row) {
+        const appId = row.id
+        switchAuditMode(appId).then((res) => {
+          this.$message({
+            message: '切换成功',
+            type: 'success'
+          })
+        }).catch((err) => {
+          let {message} = err.response.data
+          this.$message.error(message || err.message)
         })
       },
       selsChange: function (sels) {
