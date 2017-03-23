@@ -4,6 +4,7 @@ import Home from './pages/Home.vue'
 import YssAlbums from './pages/yss/AlbumList.vue'
 import AppList from './pages/common/AppList.vue'
 import H5AppDetail from './pages/h5/AppDetail.vue'
+import BookList from './pages/dzs/BookList.vue'
 import  './pages/Main.vue'
 
 let routes = [
@@ -83,16 +84,21 @@ let routes = [
     }]
   },
   {
-    path: '/book',
+    path: '/dzs',
     component: Home,
     name: '电子书',
     iconCls: 'el-icon-message', //图标样式class
-    children: [{
-      path: '/book/apps',
-      component: AppList,
-      props: {appType: '电子书'},
-      name: 'App列表-电子书'
-    }]
+    children: [
+      {
+        path: '/dzs/apps',
+        component: AppList,
+        props: {appType: '电子书'},
+        name: 'App列表-电子书'
+      }, {
+        path: '/dzs/books',
+        component: BookList,
+        name: '图书列表'
+      }]
   },
   {
     path: '*',

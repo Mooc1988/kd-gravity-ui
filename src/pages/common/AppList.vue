@@ -20,11 +20,11 @@
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="id" label="ID" width="60">
             </el-table-column>
-            <el-table-column prop="name" label="名称" min-width="200" sortable>
+            <el-table-column prop="name" label="名称" min-width="200">
             </el-table-column>
-            <el-table-column prop="type" label="类型" width="120" sortable>
+            <el-table-column prop="type" label="类型" width="120">
             </el-table-column>
-            <el-table-column label="审核模式" width="120" sortable>
+            <el-table-column label="审核模式" width="120">
                 <template scope="scope">
                     <el-switch
                             v-model="scope.row.auditMode"
@@ -91,13 +91,7 @@
 <script>
   import util from '../../common/js/util';
   import NProgress from 'nprogress';
-  import {
-    getAppListPage,
-    addApp,
-    modifyApp,
-    removeApp,
-    switchAuditMode
-  } from '../../api/api';
+  import { app } from '../../api'
   export default {
     props: ['appType'],
     watch: {
@@ -157,7 +151,7 @@
         }
         this.listLoading = true
         NProgress.start()
-        getAppListPage(para).then((res) => {
+        app.getAppListPage(para).then((res) => {
           this.total = res.data.count
           this.apps = res.data.rows
           this.listLoading = false
@@ -174,7 +168,7 @@
           type: 'warning'
         }).then(() => {
           this.listLoading = true
-          removeApp(row.id).then((res) => {
+          app.removeApp(row.id).then((res) => {
             this.listLoading = false
             this.$message({
               message: '删除成功',
@@ -208,7 +202,7 @@
           if (valid) {
             this.editLoading = true
             let para = Object.assign({}, this.editForm)
-            modifyApp(para).then((res) => {
+            app.modifyApp(para).then((res) => {
               this.editLoading = false
               this.$message({
                 message: '提交成功',
@@ -231,7 +225,7 @@
           if (valid) {
             this.addLoading = true
             let para = Object.assign({}, this.addForm)
-            addApp(para).then((res) => {
+            app.addApp(para).then((res) => {
               this.addLoading = false
               this.$message({
                 message: '提交成功',
@@ -250,7 +244,7 @@
       },
       handleSwitchAudit: function (index, row) {
         const appId = row.id
-        switchAuditMode(appId).then((res) => {
+        app.switchAuditMode(appId).then((res) => {
           this.$message({
             message: '切换成功',
             type: 'success'
