@@ -38,7 +38,6 @@
                 <template scope="scope">
                     <el-button v-if="scope.row.recommendLink" type="text" @click="openLink(scope.row.recommendLink)">
                         预览
-
                     </el-button>
                     <span v-if="!scope.row.recommendLink">-</span>
                 </template>
@@ -157,6 +156,7 @@
       },
       handleCurrentChange(val) {
         this.page = val
+        this.getApps()
       },
       getApps() {
         let para = {
