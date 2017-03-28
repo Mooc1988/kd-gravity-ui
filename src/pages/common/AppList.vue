@@ -34,6 +34,15 @@
                     </el-switch>
                 </template>
             </el-table-column>
+            <el-table-column label="推广链接" width="120">
+                <template scope="scope">
+                    <el-button v-if="scope.row.recommendLink" type="text" @click="openLink(scope.row.recommendLink)">
+                        预览
+
+                    </el-button>
+                    <span v-if="!scope.row.recommendLink">-</span>
+                </template>
+            </el-table-column>
             <el-table-column prop="User.nickname" label="创建人" width="120" sortable>
             </el-table-column>
             <el-table-column prop="createdAt" label="创建时间" width="200" :formatter="formatDate" sortable>
@@ -59,6 +68,9 @@
             <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
                 <el-form-item label="App名称" prop="name">
                     <el-input v-model="editForm.name" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="推广链接" prop="recommendLink">
+                    <el-input v-model="editForm.recommendLink" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="App类型" prop="type">
                     <el-input v-model="editForm.type" :disabled="true"></el-input>
@@ -140,6 +152,9 @@
       }
     },
     methods: {
+      openLink(link){
+        window.open(link)
+      },
       handleCurrentChange(val) {
         this.page = val
       },
