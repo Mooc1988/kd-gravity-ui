@@ -7,7 +7,7 @@
                     <el-input v-model="filters.keyword" placeholder="名称或作者"></el-input>
                 </el-form-item>
                 <el-select v-model="category" placeholder="请选择" v-on:change="getBooks">
-                    <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.name">
+                    <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.id">
                     </el-option>
                 </el-select>
                 <el-form-item>
@@ -136,7 +136,7 @@
       getCategories(){
         dzs.getCategories().then((res) => {
           let categories = res.data
-          categories.unshift({id: 999, name: '所有分类'})
+          categories.unshift({id: 0, name: '所有分类'})
           this.categories = categories
         })
       },
@@ -144,7 +144,7 @@
         let para = {
           page: this.page,
           keyword: this.filters.keyword,
-          tag: this.category === "所有分类" ? undefined : this.category
+          category: this.category === 0 ? undefined : this.category
         }
         this.listLoading = true
         dzs.getBooks(para).then((res) => {
