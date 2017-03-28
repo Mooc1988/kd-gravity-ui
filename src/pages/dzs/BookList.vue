@@ -16,6 +16,7 @@
                 <el-form-item>
                     <el-button type="primary" @click="handleAddToApp" :disabled="this.sels.length===0">
                         添加至APP
+
                     </el-button>
                 </el-form-item>
             </el-form>
@@ -85,7 +86,7 @@
     data() {
       return {
         categories: [],
-        category: '所有分类',
+        category: 0,
         filters: {
           name: ''
         },
