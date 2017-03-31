@@ -1,46 +1,49 @@
 export const categories = [{
-    "value": "",
-    "label": "所有分类"
+  "value": "",
+  "label": "所有分类"
 }, {
-    "value": "book",
-    "label": "有声书"
+  "value": "xiaoshuo",
+  "label": "有声小说"
 }, {
-    "value": "chair",
-    "label": "教育培训"
+  "value": "book",
+  "label": "有声书"
 }, {
-    "value": "comic",
-    "label": "相声评书"
+  "value": "chair",
+  "label": "教育培训"
 }, {
-    "value": "culture",
-    "label": "历史"
+  "value": "comic",
+  "label": "相声评书"
 }, {
-    "value": "dianying",
-    "label": "电影"
+  "value": "culture",
+  "label": "历史"
 }, {
-    "value": "emotion",
-    "label": "情感生活"
+  "value": "dianying",
+  "label": "电影"
 }, {
-    "value": "english",
-    "label": "英语"
+  "value": "emotion",
+  "label": "情感生活"
 }, {
-    "value": "entertainment",
-    "label": "娱乐"
+  "value": "english",
+  "label": "英语"
 }, {
-    "value": "health",
-    "label": "健康养生"
+  "value": "entertainment",
+  "label": "娱乐"
 }, {
-    "value": "kid",
-    "label": "儿童"
+  "value": "health",
+  "label": "健康养生"
 }, {
-    "value": "music",
-    "label": "音乐"
+  "value": "kid",
+  "label": "儿童"
 }, {
-    "value": "radioplay",
-    "label": "广播剧"
+  "value": "music",
+  "label": "音乐"
 }, {
-    "value": "renwen",
-    "label": "人文"
+  "value": "radioplay",
+  "label": "广播剧"
 }, {
-    "value": "talk2",
-    "label": "脱口秀"
+  "value": "renwen",
+  "label": "人文"
+}, {
+  "value": "talk2",
+  "label": "脱口秀"
 }]
