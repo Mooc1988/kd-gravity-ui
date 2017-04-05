@@ -7,7 +7,10 @@
                     <el-input v-model="filters.keyword" placeholder="名称或标签"></el-input>
                 </el-form-item>
                 <el-select v-model="category" placeholder="请选择" v-on:change="getAlbums">
-                    <el-option v-for="item in catergories" :key="item.value" :label="item.label" :value="item.value">
+                    <el-option v-for="item in catergories"
+                               :key="item.value"
+                               :label="item.label"
+                               :value="item.value">
                     </el-option>
                 </el-select>
                 <el-form-item>

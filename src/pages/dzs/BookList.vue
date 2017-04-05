@@ -17,6 +17,7 @@
                     <el-button type="primary" @click="handleAddToApp" :disabled="this.sels.length===0">
                         添加至APP
 
+
                     </el-button>
                 </el-form-item>
             </el-form>
@@ -26,6 +27,11 @@
                   style="width: 100%;">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="id" label="ID" width="100"></el-table-column>
+            <el-table-column label="封面" min-width="150">
+                <template scope="scope">
+                    <img :src="'http://book.hizuoye.com/images/full/'+scope.row.coverImage" />
+                </template>
+            </el-table-column>
             <el-table-column prop="title" label="名称" min-width="150"></el-table-column>
             <el-table-column prop="author" label="作者" min-width="150"></el-table-column>
             <el-table-column label="分类" min-width="150">

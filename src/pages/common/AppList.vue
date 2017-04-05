@@ -20,9 +20,11 @@
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="id" label="ID" width="60">
             </el-table-column>
-            <el-table-column prop="name" label="名称" min-width="200">
+            <el-table-column prop="name" label="名称" min-width="180">
             </el-table-column>
-            <el-table-column prop="type" label="类型" width="120">
+            <el-table-column prop="type" label="类型" width="100">
+            </el-table-column>
+            <el-table-column prop="subType" label="子类型" width="100" v-if="hasSubType">
             </el-table-column>
             <el-table-column label="审核模式" width="120">
                 <template scope="scope">
@@ -74,6 +76,9 @@
                 <el-form-item label="App类型" prop="type">
                     <el-input v-model="editForm.type" :disabled="true"></el-input>
                 </el-form-item>
+                <el-form-item label="子类型" prop="subType" v-if="hasSubType">
+                    <el-input v-model="editForm.subType"></el-input>
+                </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -89,6 +94,9 @@
                 </el-form-item>
                 <el-form-item label="App类型" prop="type">
                     <el-input v-model="addForm.type" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="子类型" prop="subType" v-if="hasSubType">
+                    <el-input v-model="addForm.subType"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -108,6 +116,11 @@
     watch: {
       appType: function () {
         this.getApps()
+      }
+    },
+    computed: {
+      hasSubType: function () {
+        return this.appType === '游戏'
       }
     },
     data() {
@@ -132,7 +145,8 @@
         //编辑界面数据
         editForm: {
           id: 0,
-          type: this.appType
+          type: this.appType,
+          subType: ''
         },
         addFormVisible: false, //新增界面是否显示
         addLoading: false,
@@ -146,7 +160,8 @@
         //新增界面数据
         addForm: {
           name: '',
-          type: this.appType
+          type: this.appType,
+          subType: '',
         }
       }
     },
@@ -208,7 +223,8 @@
         this.addFormVisible = true
         this.addForm = {
           name: '',
-          type: this.appType
+          type: this.appType,
+          subType: ''
         }
       },
       //编辑

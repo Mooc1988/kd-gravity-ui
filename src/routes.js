@@ -72,15 +72,15 @@ let routes = [
     }]
   },
   {
-    path: '/qipai',
+    path: '/games',
     component: Home,
-    name: '棋牌',
+    name: '游戏',
     iconCls: 'el-icon-message', //图标样式class
     children: [{
-      path: '/qipai/apps',
+      path: '/games/apps',
       component: AppList,
-      props: {appType: '棋牌'},
-      name: 'App列表-棋牌'
+      props: {appType: '游戏'},
+      name: 'App列表-游戏'
     }]
   },
   {
