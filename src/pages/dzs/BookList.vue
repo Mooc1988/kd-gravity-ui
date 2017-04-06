@@ -17,7 +17,6 @@
                     <el-button type="primary" @click="handleAddToApp" :disabled="this.sels.length===0">
                         添加至APP
 
-
                     </el-button>
                 </el-form-item>
             </el-form>
@@ -29,7 +28,7 @@
             <el-table-column prop="id" label="ID" width="100"></el-table-column>
             <el-table-column label="封面" min-width="150">
                 <template scope="scope">
-                    <img :src="'http://book.hizuoye.com/images/full/'+scope.row.coverImage" />
+                    <img :src="'http://book.hizuoye.com/images/full/'+scope.row.coverImage" width="120" height="150"/>
                 </template>
             </el-table-column>
             <el-table-column prop="title" label="名称" min-width="150"></el-table-column>
@@ -62,6 +61,15 @@
                     <el-input v-model="editForm.title" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
+            <el-upload
+                    class="avatar-uploader"
+                    action="http://upload.hizuoye.com/upload"
+                    :show-file-list="false"
+                    :on-success="handleAvatarSuccess"
+                    :before-upload="beforeAvatarUpload">
+                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
             <div slot="footer" class="dialog-footer">
                 <el-button @click.native="editFormVisible = false">取消</el-button>
                 <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
@@ -91,6 +99,7 @@
   export default {
     data() {
       return {
+        imageUrl: '',
         categories: [],
         category: 0,
         filters: {
@@ -164,6 +173,7 @@
       handleEdit: function (index, row) {
         this.editFormVisible = true
         this.editForm = Object.assign({}, row)
+        this.imageUrl = 'http://book.hizuoye.com/images/full/' + row.coverImage
       },
       handleAddToApp: function () {
         this.addToAppFormVisible = true
@@ -176,7 +186,7 @@
           if (valid) {
             this.editLoading = true
             let para = Object.assign({}, this.editForm)
-            modifyApp(para).then((res) => {
+            dzs.modifyBookById(para).then((res) => {
               this.editLoading = false
               this.$message({
                 message: '提交成功',
@@ -223,6 +233,23 @@
             })
           }
         })
+      },
+      handleAvatarSuccess(res, file) {
+        if (res.success) {
+          this.editForm.coverImage = res.name
+        }
+        this.imageUrl = URL.createObjectURL(file.raw);
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isJPG) {
+          this.$message.error('图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
       }
     },
     mounted() {
@@ -234,5 +261,32 @@
 <style>
     .el-tag {
         margin: 5px
+    }
+
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .avatar-uploader .el-upload:hover {
+        border-color: #20a0ff;
+    }
+
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
     }
 </style>
