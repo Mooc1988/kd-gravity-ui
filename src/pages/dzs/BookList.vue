@@ -17,6 +17,7 @@
                     <el-button type="primary" @click="handleAddToApp" :disabled="this.sels.length===0">
                         添加至APP
 
+
                     </el-button>
                 </el-form-item>
             </el-form>
@@ -28,7 +29,7 @@
             <el-table-column prop="id" label="ID" width="100"></el-table-column>
             <el-table-column label="封面" min-width="150">
                 <template scope="scope">
-                    <img :src="'http://book.hizuoye.com/images/full/'+scope.row.coverImage" width="120" height="150"/>
+                    <img :src="'http://book.hizuoye.com/images/full/'+scope.row.coverImage" width="120" height="150" />
                 </template>
             </el-table-column>
             <el-table-column prop="title" label="名称" min-width="150"></el-table-column>
@@ -262,31 +263,20 @@
     .el-tag {
         margin: 5px
     }
-
     .avatar-uploader .el-upload {
         border: 1px dashed #d9d9d9;
         border-radius: 6px;
         cursor: pointer;
         position: relative;
         overflow: hidden;
+        margin-left: 80px
     }
-
     .avatar-uploader .el-upload:hover {
         border-color: #20a0ff;
     }
-
-    .avatar-uploader-icon {
-        font-size: 28px;
-        color: #8c939d;
+    .avatar {
         width: 120px;
         height: 150px;
-        line-height: 178px;
-        text-align: center;
-    }
-
-    .avatar {
-        width: 178px;
-        height: 178px;
         display: block;
     }
 </style>
