@@ -17,7 +17,6 @@
                     <el-button type="primary" @click="handleAddToApp" :disabled="this.sels.length===0">
                         添加至APP
 
-
                     </el-button>
                 </el-form-item>
             </el-form>
@@ -263,6 +262,7 @@
     .el-tag {
         margin: 5px
     }
+
     .avatar-uploader .el-upload {
         border: 1px dashed #d9d9d9;
         border-radius: 6px;
@@ -271,12 +271,18 @@
         overflow: hidden;
         margin-left: 80px
     }
+
     .avatar-uploader .el-upload:hover {
         border-color: #20a0ff;
     }
+
     .avatar {
         width: 120px;
         height: 150px;
         display: block;
+    }
+
+    .el-table .cell {
+        padding: 10px;
     }
 </style>
