@@ -11,8 +11,11 @@ import 'nprogress/nprogress.css'
 import routes from './routes'
 import Mock from './mock'
 import 'font-awesome/css/font-awesome.min.css'
+import VueCodeMirror from 'vue-codemirror'
+
 
 Mock.bootstrap();
+Vue.use(VueCodeMirror)
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)

@@ -1,8 +1,11 @@
 import Login from './pages/Login.vue'
 import NotFound from './pages/404.vue'
 import Home from './pages/Home.vue'
-import YssAlbums from './pages/yss/AlbumList.vue'
 import AppList from './pages/common/AppList.vue'
+import AdTemplateList from './pages/settings/ListTemplate.vue'
+import EditTemplate from './pages/settings/EditTemplate.vue'
+import AddTemplate from './pages/settings/AddTemplate.vue'
+import YssAlbums from './pages/yss/AlbumList.vue'
 import H5AppDetail from './pages/h5/AppDetail.vue'
 import BookList from './pages/dzs/BookList.vue'
 import  './pages/Main.vue'
@@ -98,6 +101,28 @@ let routes = [
         path: '/dzs/books',
         component: BookList,
         name: '图书列表'
+      }]
+  },
+  {
+    path: '/settings',
+    component: Home,
+    name: '设置',
+    iconCls: 'el-icon-message', //图标样式class
+    children: [
+      {
+        path: '/settings/templates',
+        component: AdTemplateList,
+        name: '模版列表'
+      }, {
+        path: '/settings/templates/add',
+        component: AddTemplate,
+        name: '添加模版',
+        hidden: true
+      }, {
+        path: '/settings/templates/:id',
+        component: EditTemplate,
+        name: '模版详情',
+        hidden: true
       }]
   },
   {
