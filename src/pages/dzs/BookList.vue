@@ -16,7 +16,6 @@
                 <el-form-item>
                     <el-button type="primary" @click="handleAddToApp" :disabled="this.sels.length===0">
                         添加至APP
-
                     </el-button>
                 </el-form-item>
             </el-form>
@@ -28,7 +27,7 @@
             <el-table-column prop="id" label="ID" width="100"></el-table-column>
             <el-table-column label="封面" min-width="150">
                 <template scope="scope">
-                    <img :src="'http://book.hizuoye.com/images/full/'+scope.row.coverImage" width="120" height="150" />
+                    <img :src="scope.row.coverImage" width="120" height="150" />
                 </template>
             </el-table-column>
             <el-table-column prop="title" label="名称" min-width="150"></el-table-column>
@@ -63,7 +62,8 @@
             </el-form>
             <el-upload
                     class="avatar-uploader"
-                    action="http://upload.hizuoye.com/upload"
+                    action="http://upload.hizuoye.com/upload/book/image"
+                    :data="editBook"
                     :show-file-list="false"
                     :on-success="handleAvatarSuccess"
                     :before-upload="beforeAvatarUpload">
@@ -137,9 +137,9 @@
         }
       }
     },
-    filters: {
-      imgPath(val){
-        return `http://book.hizuoye.com/images/full/${val}`
+    computed: {
+      editBook: function () {
+        return {book: this.editForm.uid}
       }
     },
     methods: {
@@ -173,7 +173,7 @@
       handleEdit: function (index, row) {
         this.editFormVisible = true
         this.editForm = Object.assign({}, row)
-        this.imageUrl = 'http://book.hizuoye.com/images/full/' + row.coverImage
+        this.imageUrl = row.coverImage
       },
       handleAddToApp: function () {
         this.addToAppFormVisible = true
@@ -236,9 +236,18 @@
       },
       handleAvatarSuccess(res, file) {
         if (res.success) {
-          this.editForm.coverImage = res.name
+          console.log(res)
+          let uid = this.editForm.uid
+          let name = res.name
+          this.editForm.coverImage = `https://book.hizuoye.com/books/${uid}/${name}`
+          this.$message({
+            message: '上传图片成功',
+            type: 'success'
+          })
+          this.imageUrl = URL.createObjectURL(file.raw);
+        } else {
+          this.$message.error('上传图片失败');
         }
-        this.imageUrl = URL.createObjectURL(file.raw);
       },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg';
