@@ -23,3 +23,12 @@ export const createOrUpdate = params => {
   let {UserId} = params
   return instance.post(`/users/${UserId}/templates`, params)
 }
+
+export const getUserTemplates = params => {
+  let {UserId} = params
+  return instance.get(`/users/${UserId}/templates`, {params})
+}
+
+export const getPositions = params => {
+  return instance.get('/templates/positions', {params})
+}

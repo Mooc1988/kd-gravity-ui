@@ -58,7 +58,7 @@
           mode: 'application/json',
           theme: 'dracula',
           height: 'auto',
-          lineNumbers: true
+          lineNumbers: false
         },
         templateFormRules: {
           name: [{
@@ -115,8 +115,6 @@
           this.$message.error('广告数据不是标准json')
           return
         }
-        delete data['adsStr']
-        delete data['metaStr']
         this.$refs.templateForm.validate((valid) => {
           if (valid) {
             template.createOrUpdate(data).then(res => {

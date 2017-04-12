@@ -16,6 +16,8 @@
             </el-table-column>
             <el-table-column prop="type" label="APP类型" width="100">
             </el-table-column>
+            <el-table-column prop="version" label="版本" width="100">
+            </el-table-column>
             <el-table-column prop="User.nickname" label="所属用户" width="100">
             </el-table-column>
             <el-table-column label="meta字段" width="100">
@@ -91,6 +93,7 @@
       getTemplates() {
         let para = {
           page: this.page,
+          enable: true,
           search: this.filters.name,
           type: this.appType
         }
@@ -111,11 +114,9 @@
       handleAdd: function () {
         this.$router.push({path: '/settings/templates/add'})
       },
-
       selsChange: function (sels) {
         this.sels = sels
       },
-
       formatDate: function (row) {
         return row.createdAt.substr(0, 10)
       }

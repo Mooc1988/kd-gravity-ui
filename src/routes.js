@@ -4,6 +4,7 @@ import Home from './pages/Home.vue'
 import AppList from './pages/common/AppList.vue'
 import AdTemplateList from './pages/settings/ListTemplate.vue'
 import EditTemplate from './pages/settings/EditTemplate.vue'
+import BatchModifyAd from './pages/settings/BatchModifyAd.vue'
 import AddTemplate from './pages/settings/AddTemplate.vue'
 import YssAlbums from './pages/yss/AlbumList.vue'
 import H5AppDetail from './pages/h5/AppDetail.vue'
@@ -112,7 +113,13 @@ let routes = [
       {
         path: '/settings/templates',
         component: AdTemplateList,
-        name: '模版列表'
+        name: '模版列表',
+        roles: ['admin']
+      }, {
+        path: '/settings/modifyAd',
+        component: BatchModifyAd,
+        name: '修改广告位',
+        roles: ['admin']
       }, {
         path: '/settings/templates/add',
         component: AddTemplate,

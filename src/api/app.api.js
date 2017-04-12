@@ -22,3 +22,6 @@ export const switchAuditMode = appId => {
   return instance.put(`/apps/${appId}/switchAuditMode`)
 }
 
+export const batchModifyAds = params => {
+  return instance.put('/ads/batch', params)
+}

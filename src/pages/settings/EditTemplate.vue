@@ -10,6 +10,9 @@
                     <el-form-item label="类型">
                         <el-input v-model="templateForm.type" :disabled="true"></el-input>
                     </el-form-item>
+                    <el-form-item label="版本">
+                        <el-input v-model="templateForm.version" :disabled="true"></el-input>
+                    </el-form-item>
                     <el-form-item label="所属用户">
                         <el-input v-model="templateForm.User.nickname" :disabled="true"></el-input>
                     </el-form-item>
@@ -24,6 +27,7 @@
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="modify">修改</el-button>
+                        <el-button type="primary" @click="upgrade">升级</el-button>
                         <el-button @click="back">返回</el-button>
                     </el-form-item>
                 </el-form>
@@ -43,7 +47,7 @@
           mode: 'application/json',
           theme: 'dracula',
           height: 'auto',
-          lineNumbers: true
+          lineNumbers: false
         },
         templateFormRules: {
           name: [{
@@ -54,13 +58,15 @@
         },
         templateForm: {
           "id": null,
+          "version": null,
           "name": '',
           "recommendLink": '',
           "meta": null,
           "metaStr": "",
           "adsStr": "",
           "type": '',
-          "User": {}
+          "User": {},
+          "upgrade": false
         }
       }
     },
@@ -68,7 +74,7 @@
       modify(){
         let data = this.templateForm
         let {metaStr, adsStr} = data
-        if (metaStr && metaStr.trim() !== '') {
+        if (metaStr) {
           try {
             data.meta = JSON.parse(metaStr)
           } catch (err) {
@@ -84,11 +90,10 @@
             data.ads = ads
           }
         } catch (err) {
+          console.error(err)
           this.$message.error('广告数据不是标准json')
           return
         }
-        delete data['adsStr']
-        delete data['metaStr']
         this.$refs.templateForm.validate((valid) => {
           if (valid) {
             template.modifyById(data).then((res) => {
@@ -96,8 +101,19 @@
                 message: '修改成功',
                 type: 'success'
               })
+            }).catch((err) => {
+              let {message} = err.response.data
+              this.$message.error(message || err.message)
             })
           }
+        })
+      },
+      upgrade(){
+        this.templateForm.upgrade = true
+        this.$confirm('确认升级模版?', '提示', {
+          type: 'warning'
+        }).then(() => {
+          this.modify()
         })
       },
       getTemplate() {
