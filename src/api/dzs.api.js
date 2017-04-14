@@ -7,6 +7,10 @@ export const getBooks = params => {
   return instance.get('/dzs/books', {params})
 }
 
+export const addBook = params => {
+  return instance.post('/dzs/books', params)
+}
+
 export const modifyBookById = params => {
   let {id} = params
   return instance.put(`/dzs/books/${id}`, params)

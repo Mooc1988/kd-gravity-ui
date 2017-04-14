@@ -7,15 +7,20 @@
                     <el-input v-model="filters.keyword" placeholder="名称或作者"></el-input>
                 </el-form-item>
                 <el-select v-model="category" placeholder="请选择" v-on:change="getBooks">
-                    <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.id">
-                    </el-option>
+                    <el-option :label="'所有分类'" :value="0" :key="'0'"></el-option>
+                    <el-option v-for="item in categories" :key="item.id" :label="item.name"
+                               :value="item.id"></el-option>
                 </el-select>
                 <el-form-item>
                     <el-button type="primary" v-on:click="getBooks">查询</el-button>
                 </el-form-item>
                 <el-form-item>
+                    <el-button type="primary" v-on:click="handleAdd">添加</el-button>
+                </el-form-item>
+                <el-form-item>
                     <el-button type="primary" @click="handleAddToApp" :disabled="this.sels.length===0">
                         添加至APP
+
                     </el-button>
                 </el-form-item>
             </el-form>
@@ -59,6 +64,12 @@
                 <el-form-item label="名称" prop="title">
                     <el-input v-model="editForm.title" auto-complete="off"></el-input>
                 </el-form-item>
+                <el-form-item label="作者" prop="author">
+                    <el-input v-model="editForm.author" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="简介" prop="brief">
+                    <el-input type="textarea" v-model="editForm.brief"></el-input>
+                </el-form-item>
             </el-form>
             <el-upload
                     class="avatar-uploader"
@@ -73,6 +84,37 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click.native="editFormVisible = false">取消</el-button>
                 <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
+            </div>
+        </el-dialog>
+
+        <!--添加界面-->
+        <el-dialog title="添加" v-model="addFormVisible" :close-on-click-modal="false">
+            <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
+                <el-form-item label="名称" prop="title">
+                    <el-input v-model="addForm.title" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="编号" prop="uid">
+                    <el-input v-model="addForm.uid" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="作者" prop="author">
+                    <el-input v-model="addForm.author" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="分类" prop="CategoryId">
+                    <el-select v-model="addForm.categoryId" placeholder="请选择">
+                        <el-option v-for="cate in categories"
+                                   :key="cate.id"
+                                   :label="cate.name"
+                                   :value="cate.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="简介" prop="title">
+                    <el-input type="textarea" v-model="addForm.brief"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click.native="addFormVisible = false">取消</el-button>
+                <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
             </div>
         </el-dialog>
 
@@ -113,15 +155,49 @@
         editFormVisible: false, //编辑界面是否显示
         editLoading: false,
         editFormRules: {
-          name: [{
+          title: [{
             required: true,
             message: '请输入名称',
             trigger: 'blur'
-          }]
+          }],
+          author: [{
+            required: true,
+            message: '请输入作者',
+            trigger: 'blur'
+          }],
         },
         //编辑界面数据
         editForm: {
           id: 0,
+        },
+        addForm: {
+          title: null,
+          CategoryId: null,
+          author: null,
+          uid: null
+        },
+        addFormVisible: false,
+        addLoading: false,
+        addFormRules: {
+          title: [{
+            required: true,
+            message: '请输入名称',
+            trigger: 'blur'
+          }],
+          uid: [{
+            required: true,
+            message: '请输入编号',
+            trigger: 'blur'
+          }],
+          author: [{
+            required: true,
+            message: '请输入作者',
+            trigger: 'blur'
+          }],
+          categoryId: [{
+            required: true,
+            message: '请输选择分类'
+          }]
         },
         addToAppFormVisible: false, //新增界面是否显示
         addToAppLoading: false,
@@ -144,6 +220,34 @@
     },
     methods: {
 
+      handleAdd(){
+        this.addFormVisible = true
+        if (this.$refs.addForm) {
+          this.$refs.addForm.resetFields();
+        }
+      },
+
+      addSubmit(){
+        this.$refs.addForm.validate((valid) => {
+          if (valid) {
+            this.addLoading = true
+            let data = Object.assign({}, this.addForm)
+            dzs.addBook(data).then(res => {
+              this.getBooks()
+              this.addLoading = false
+              this.$message({
+                message: '添加图书成功',
+                type: 'success'
+              })
+              this.addFormVisible = false
+            }).catch((err) => {
+              this.addLoading = false
+              let {message} = err.response.data
+              this.$message.error(message || err.message)
+            })
+          }
+        })
+      },
       handleCurrentChange(val) {
         this.page = val
         this.getBooks()
@@ -151,9 +255,7 @@
 
       getCategories(){
         dzs.getCategories().then((res) => {
-          let categories = res.data
-          categories.unshift({id: 0, name: '所有分类'})
-          this.categories = categories
+          this.categories = res.data
         })
       },
       getBooks() {
