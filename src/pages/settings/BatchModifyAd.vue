@@ -4,10 +4,19 @@
         <el-row>
             <el-col :span="14" :offset="2">
                 <el-form label-width="100px" :model="templateForm" :rules="templateFormRules" ref="templateForm">
-
                     <el-form-item label="APP类型" prop="type">
-                        <el-select v-model="templateForm.type" placeholder="请选择" @change="getTemplates">
+                        <el-select v-model="templateForm.type" placeholder="请选择" @change="selectType">
                             <el-option v-for="item in appTypes"
+                                       :key="item"
+                                       :label="item"
+                                       :value="item">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+
+                    <el-form-item label="子类型" prop="subType" v-if="templateForm.type === '游戏'">
+                        <el-select v-model="templateForm.subType" placeholder="请选择" @change="selectSubType">
+                            <el-option v-for="item in subTypes"
                                        :key="item"
                                        :label="item"
                                        :value="item">
@@ -34,11 +43,10 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-
                     <el-form-item label="广告位" prop="position">
                         <el-select v-model="templateForm.position" placeholder="请选择" @change="selectPosition">
                             <el-option v-for="p in positions"
-                                       :key="p.position"
+                                       :key="p.name"
                                        :label="p.name"
                                        :value="p.position">
                             </el-option>
@@ -69,6 +77,7 @@
         positions: [],
         templates: [],
         appTypes: APP_TYPES,
+        subTypes: [],
         editorOptions: {
           mode: 'application/json',
           lineNumbers: false,
@@ -79,9 +88,10 @@
             message: '选择App类型',
             trigger: 'blur'
           }],
-          dataStr: [{
+          subType: [{
             required: true,
-            message: '没有广告数据'
+            message: '选择子类型',
+            trigger: 'blur'
           }],
           UserId: [{
             required: true,
@@ -99,39 +109,66 @@
         templateForm: {
           "version": null,
           "type": null,
-          "adsStr": '',
+          "adsStr": null,
           "UserId": null,
-          "position": null
+          "position": null,
+          "subType": null
         }
       }
     },
     methods: {
+      selectType (type) {
+        this.templateForm.version = null
+        this.templateForm.adsStr = ''
+        this.templateForm.UserId = null
+        this.templateForm.position = null
+        this.templateForm.subType = null
+      },
+      selectSubType(){
+        this.templateForm.version = null
+        this.templateForm.adsStr = ''
+        this.templateForm.UserId = null
+        this.templateForm.position = nul
+      },
+
       selectVersion(v){
         if (v) {
-          let {ads} = this.templates.filter(t => t.version === v)[0]
-          this.positions = ads
+          for (let t of  this.templates) {
+            if (t.version === v) {
+              this.positions = t.ads
+              this.templateForm.adsStr = ''
+              this.templateForm.position = null
+            }
+          }
         }
       },
 
       selectPosition(v){
-        let ad = this.positions.filter(p => p.position = v)[0]
-        this.templateForm.adsStr = JSON.stringify(ad, undefined, 4)
+        for (let p of  this.positions) {
+          if (p.position === v) {
+            this.templateForm.adsStr = JSON.stringify(p, undefined, 4)
+          }
+        }
       },
 
       batchModify(){
         let data = Object.assign({}, this.templateForm)
         let {adsStr} = data
-        this.$confirm('确定批量修改广告位？', '提示', {
-          type: 'warning'
-        }).then(() => {
-          this.$refs.templateForm.validate((valid) => {
-            if (valid) {
-              try {
-                data.data = JSON.parse(adsStr)
-              } catch (err) {
-                this.$message.error('广告数据不是标准json')
-                return
-              }
+        this.$refs.templateForm.validate((valid) => {
+          if (valid) {
+            if (!adsStr) {
+              this.$message.error('必须填写广告数据')
+              return
+            }
+            try {
+              data.ad = JSON.parse(adsStr)
+            } catch (err) {
+              this.$message.error('广告数据不是标准json')
+              return
+            }
+            this.$confirm('确定批量修改广告位？', '提示', {
+              type: 'warning'
+            }).then(() => {
               app.batchModifyAds(data).then(res => {
                 let {affectedCount} = res.data
                 this.$message({
@@ -142,9 +179,9 @@
                 let {message} = err.response.data
                 this.$message.error(message || err.message)
               })
-            }
-          })
-        }).catch(() => {})
+            })
+          }
+        })
       },
 
       getUsers() {
@@ -152,17 +189,23 @@
       },
 
       getTemplates(){
-        let {UserId, type} = this.templateForm
+        let {UserId, type, subType} = this.templateForm
         this.templateForm.position = null
         this.templateForm.version = null
         if (UserId && type)
-          template.getUserTemplates({UserId, type}).then(res => {
+          template.getUserTemplates({UserId, type, subType}).then(res => {
             this.templates = res.data
           })
-      }
+      },
+      getSubTypes (){
+        template.getSubTypes().then(res => {
+          this.subTypes = res.data
+        })
+      },
     },
     mounted() {
       this.getUsers()
+      this.getSubTypes()
     }
   }
 </script>

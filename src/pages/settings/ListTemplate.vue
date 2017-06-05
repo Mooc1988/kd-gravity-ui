@@ -16,40 +16,23 @@
             </el-table-column>
             <el-table-column prop="type" label="APP类型" width="100">
             </el-table-column>
+            <el-table-column prop="subType" label="子类型" width="100">
+            </el-table-column>
             <el-table-column prop="version" label="版本" width="100">
             </el-table-column>
             <el-table-column prop="User.nickname" label="所属用户" width="100">
-            </el-table-column>
-            <el-table-column label="meta字段" width="100">
-                <template scope="scope">
-                    <el-popover
-                            ref="popover1"
-                            placement="top-start"
-                            width="200"
-                            trigger="hover">
-                        <p>{{scope.row.meta}}</p>
-                    </el-popover>
-                    <el-button type="text" v-popover:popover1 v-if="scope.row.meta">查看</el-button>
-                    <span v-if="!scope.row.meta">-</span>
-                </template>
-            </el-table-column>
-            <el-table-column label="推广链接" width="120">
-                <template scope="scope">
-                    <el-button v-if="scope.row.recommendLink" type="text" @click="openLink(scope.row.recommendLink)">
-                        预览
-                    </el-button>
-                    <span v-if="!scope.row.recommendLink">-</span>
-                </template>
             </el-table-column>
             <el-table-column prop="createdAt" label="创建时间" width="200" :formatter="formatDate" sortable>
             </el-table-column>
             <el-table-column label="操作" width="200">
                 <template scope="scope">
                     <el-button size="small" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
+                    <el-button size="small" :plain="true" type="danger" @click="handleUpgrade(scope.$index, scope.row)">
+                        升级
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
-
         <!--工具条-->
         <el-col :span="24" class="toolbar">
             <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange"
@@ -85,6 +68,20 @@
     methods: {
       openLink(link){
         window.open(link)
+      },
+      handleUpgrade(index, row){
+        let {id, name} = row
+        this.$confirm(`确认升级模版 ${name}`, '提示', {
+          type: 'warning'
+        }).then(() => {
+          template.upgradeById({id}).then(res => {
+            this.getTemplates()
+            this.$message({
+              message: '模版升级成功',
+              type: 'success'
+            })
+          })
+        })
       },
       handleCurrentChange(val) {
         this.page = val

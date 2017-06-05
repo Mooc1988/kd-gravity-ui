@@ -16,6 +16,9 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
+                    <el-form-item label="子类型" v-if="templateForm.type=='游戏'" prop="subType">
+                        <el-input v-model="templateForm.subType"></el-input>
+                    </el-form-item>
                     <el-form-item label="所属用户" prop="UserId">
                         <el-select v-model="templateForm.UserId" placeholder="请选择">
                             <el-option v-for="user in users"
@@ -69,6 +72,11 @@
           type: [{
             required: true,
             message: '选择App类型',
+            trigger: 'blur'
+          }],
+          subType: [{
+            required: true,
+            message: '输入App子类型',
             trigger: 'blur'
           }],
           adsStr: [{

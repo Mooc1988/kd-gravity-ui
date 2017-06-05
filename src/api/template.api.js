@@ -9,6 +9,9 @@ export const getAll = params => {
     params
   })
 }
+export const getUserTemplates = params => {
+  return instance.get('/templates/user', {params})
+}
 
 export const getById = id => {
   return instance.get(`/templates/${id}`)
@@ -19,16 +22,17 @@ export const modifyById = params => {
   return instance.put(`/templates/${id}`, params)
 }
 
+export const upgradeById = params => {
+  let {id} = params
+  return instance.put(`/templates/${id}/upgrade`, params)
+}
+
 export const createOrUpdate = params => {
-  let {UserId} = params
-  return instance.post(`/users/${UserId}/templates`, params)
+  return instance.post(`/templates`, params)
 }
 
-export const getUserTemplates = params => {
-  let {UserId} = params
-  return instance.get(`/users/${UserId}/templates`, {params})
+export const getSubTypes = params => {
+  return instance.get('/templates/subTypes', params)
 }
 
-export const getPositions = params => {
-  return instance.get('/templates/positions', {params})
-}
+

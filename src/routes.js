@@ -76,6 +76,18 @@ let routes = [
     }]
   },
   {
+    path: '/androidhz',
+    component: Home,
+    name: '安卓换装',
+    iconCls: 'el-icon-message', //图标样式class
+    children: [{
+      path: '/androidhz/apps',
+      component: AppList,
+      props: {appType: '安卓换装'},
+      name: 'App列表-安卓换装'
+    }]
+  },
+  {
     path: '/games',
     component: Home,
     name: '游戏',
@@ -103,6 +115,30 @@ let routes = [
         component: BookList,
         name: '图书列表'
       }]
+  },
+  {
+    path: '/zixun',
+    component: Home,
+    name: '资讯',
+    iconCls: 'el-icon-message', //图标样式class
+    children: [{
+      path: '/zixun/apps',
+      component: AppList,
+      props: {appType: '资讯'},
+      name: 'App列表-资讯'
+    }]
+  },
+  {
+    path: '/tools',
+    component: Home,
+    name: '工具',
+    iconCls: 'el-icon-message', //图标样式class
+    children: [{
+      path: '/tools/apps',
+      component: AppList,
+      props: {appType: '工具'},
+      name: 'App列表-工具'
+    }]
   },
   {
     path: '/settings',

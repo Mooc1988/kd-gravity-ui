@@ -66,10 +66,10 @@
               this.$router.push({path: '/yss/apps'})
             }).catch(err => {
               if (err.response) {
-                let {msg} = err.response.data
+                let {message} = err.response.data
                 this.logining = false
                 NProgress.done()
-                this.$message.error(msg)
+                this.$message.error(message)
               }
             })
           } else {

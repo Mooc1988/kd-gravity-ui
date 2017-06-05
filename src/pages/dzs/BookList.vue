@@ -172,7 +172,7 @@
         },
         addForm: {
           title: null,
-          CategoryId: null,
+          categoryId: null,
           author: null,
           uid: null
         },

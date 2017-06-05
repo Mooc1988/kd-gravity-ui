@@ -1,4 +1,4 @@
-export const APP_TYPES = ['有声书', '电子书', 'h5', '换装', '游戏', '资讯']
+export const APP_TYPES = ['有声书', '电子书', 'h5', '换装', '游戏', '资讯', '安卓换装', '工具']
 export const categories = [{
   "value": "",
   "label": "所有分类"

@@ -1,7 +1,7 @@
 import babelpolyfill from 'babel-polyfill'
 import Vue from 'vue'
 import App from './App'
-import ElementUI from 'element-ui'
+import Element from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import VueRouter from 'vue-router'
 import store from './vuex/store'
@@ -16,7 +16,7 @@ import VueCodeMirror from 'vue-codemirror'
 
 Mock.bootstrap();
 Vue.use(VueCodeMirror)
-Vue.use(ElementUI)
+Vue.use(Element)
 Vue.use(VueRouter)
 Vue.use(Vuex)
 

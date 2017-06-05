@@ -25,6 +25,7 @@
             <el-table-column prop="type" label="类型" width="100">
             </el-table-column>
             <el-table-column prop="subType" label="子类型" width="100" v-if="hasSubType">
+
             </el-table-column>
             <el-table-column label="审核模式" width="120">
                 <template scope="scope">
@@ -73,11 +74,8 @@
                 <el-form-item label="推广链接" prop="recommendLink">
                     <el-input v-model="editForm.recommendLink" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="App类型" prop="type">
-                    <el-input v-model="editForm.type" :disabled="true"></el-input>
-                </el-form-item>
-                <el-form-item label="子类型" prop="subType" v-if="hasSubType">
-                    <el-input v-model="editForm.subType"></el-input>
+                <el-form-item label="meta数据">
+                    <codemirror v-model="editForm.metaStr" :options="editorOptions"></codemirror>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -93,10 +91,16 @@
                     <el-input v-model="addForm.name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="App类型" prop="type">
-                    <el-input v-model="addForm.type" :disabled="true"></el-input>
+                    <el-input v-model="appType" :disabled="true"></el-input>
                 </el-form-item>
                 <el-form-item label="子类型" prop="subType" v-if="hasSubType">
-                    <el-input v-model="addForm.subType"></el-input>
+                    <el-select v-model="addForm.subType" placeholder="请选择">
+                        <el-option v-for="item in subTypes"
+                                   :key="item"
+                                   :label="item"
+                                   :value="item">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -110,7 +114,7 @@
 <script>
   import util from '../../common/js/util';
   import NProgress from 'nprogress';
-  import { app } from '../../api'
+  import { app, template } from '../../api'
   export default {
     props: ['appType'],
     watch: {
@@ -120,7 +124,7 @@
     },
     computed: {
       hasSubType: function () {
-        return this.appType === '游戏'
+        return this.appType === '游戏' || this.appType === '工具'
       }
     },
     data() {
@@ -128,7 +132,14 @@
         filters: {
           name: ''
         },
+        editorOptions: {
+          mode: 'application/json',
+          theme: 'dracula',
+          height: 'auto',
+          lineNumbers: false
+        },
         apps: [],
+        subTypes: [],
         total: 0,
         offset: 1,
         listLoading: false,
@@ -145,8 +156,8 @@
         //编辑界面数据
         editForm: {
           id: 0,
-          type: this.appType,
-          subType: ''
+          subType: '',
+          metaStr: '{}'
         },
         addFormVisible: false, //新增界面是否显示
         addLoading: false,
@@ -155,13 +166,16 @@
             required: true,
             message: '请输入名称',
             trigger: 'blur'
+          }],
+          subType: [{
+            required: true,
+            message: '选择自类型'
           }]
         },
         //新增界面数据
         addForm: {
           name: '',
-          type: this.appType,
-          subType: '',
+          subType: ''
         }
       }
     },
@@ -172,6 +186,11 @@
       handleCurrentChange(val) {
         this.page = val
         this.getApps()
+      },
+      getSubTypes (){
+        template.getSubTypes().then(res => {
+          this.subTypes = res.data
+        })
       },
       getApps() {
         let para = {
@@ -214,25 +233,29 @@
       //显示编辑界面
       handleEdit: function (index, row) {
         this.editFormVisible = true;
-        this.editForm = Object.assign({
-          type: this.appType
-        }, row)
+        this.editForm = Object.assign({}, row)
+        this.editForm.metaStr = row.meta !== null ? JSON.stringify(row.meta) : '{}'
       },
       //显示新增界面
       handleAdd: function () {
         this.addFormVisible = true
-        this.addForm = {
-          name: '',
-          type: this.appType,
-          subType: ''
+        if (this.$refs.addForm) {
+          this.$refs.addForm.resetFields();
         }
       },
       //编辑
       editSubmit: function () {
         this.$refs.editForm.validate((valid) => {
           if (valid) {
-            this.editLoading = true
             let para = Object.assign({}, this.editForm)
+            try {
+              para.meta = JSON.parse(this.editForm.metaStr)
+            } catch (err) {
+              console.error(err)
+              this.$message.error('meta不是标准json')
+              return
+            }
+            this.editLoading = true
             app.modifyApp(para).then((res) => {
               this.editLoading = false
               this.$message({
@@ -254,8 +277,8 @@
       addSubmit: function () {
         this.$refs.addForm.validate((valid) => {
           if (valid) {
+            let para = Object.assign({type: this.appType}, this.addForm)
             this.addLoading = true
-            let para = Object.assign({}, this.addForm)
             app.addApp(para).then((res) => {
               this.addLoading = false
               this.$message({
@@ -288,13 +311,13 @@
       selsChange: function (sels) {
         this.sels = sels
       },
-
       formatDate: function (row) {
         return row.createdAt.substr(0, 10)
       }
     },
     mounted() {
       this.getApps()
+      this.getSubTypes()
     }
   }
 </script>

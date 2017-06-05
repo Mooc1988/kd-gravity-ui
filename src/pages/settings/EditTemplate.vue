@@ -10,6 +10,9 @@
                     <el-form-item label="类型">
                         <el-input v-model="templateForm.type" :disabled="true"></el-input>
                     </el-form-item>
+                    <el-form-item label="子类型" v-if="templateForm.subType">
+                        <el-input v-model="templateForm.subType" :disabled="true"></el-input>
+                    </el-form-item>
                     <el-form-item label="版本">
                         <el-input v-model="templateForm.version" :disabled="true"></el-input>
                     </el-form-item>
@@ -27,7 +30,6 @@
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="modify">修改</el-button>
-                        <el-button type="primary" @click="upgrade">升级</el-button>
                         <el-button @click="back">返回</el-button>
                     </el-form-item>
                 </el-form>
@@ -65,8 +67,7 @@
           "metaStr": "",
           "adsStr": "",
           "type": '',
-          "User": {},
-          "upgrade": false
+          "User": {}
         }
       }
     },
@@ -96,24 +97,20 @@
         }
         this.$refs.templateForm.validate((valid) => {
           if (valid) {
-            template.modifyById(data).then((res) => {
-              this.$message({
-                message: '修改成功',
-                type: 'success'
+            this.$confirm(`确认修改当前模版?`, '提示', {
+              type: 'warning'
+            }).then(() => {
+              template.modifyById(data).then((res) => {
+                this.$message({
+                  message: '修改成功',
+                  type: 'success'
+                })
+              }).catch((err) => {
+                let {message} = err.response.data
+                this.$message.error(message || err.message)
               })
-            }).catch((err) => {
-              let {message} = err.response.data
-              this.$message.error(message || err.message)
             })
           }
-        })
-      },
-      upgrade(){
-        this.templateForm.upgrade = true
-        this.$confirm('确认升级模版?', '提示', {
-          type: 'warning'
-        }).then(() => {
-          this.modify()
         })
       },
       getTemplate() {
